@@ -57,6 +57,22 @@ namespace sqlpp
           }
         }
 
+        if (config->read_timeout > 0){
+          if (mysql_options(mysql.get(), MYSQL_OPT_READ_TIMEOUT, &config->read_timeout))
+          {
+            throw sqlpp::exception("MySQL: could not set option MYSQL_OPT_READ_TIMEOUT");
+          }
+        }
+
+        if (config->ssl)
+        {
+          mysql_ssl_set(mysql.get(), config->ssl_key.empty() ? nullptr : config->ssl_key.c_str(),
+                        config->ssl_cert.empty() ? nullptr : config->ssl_cert.c_str(),
+                        config->ssl_ca.empty() ? nullptr : config->ssl_ca.c_str(),
+                        config->ssl_capath.empty() ? nullptr : config->ssl_capath.c_str(),
+                        config->ssl_cipher.empty() ? nullptr : config->ssl_cipher.c_str());
+        }
+
         if (!mysql_real_connect(mysql.get(), config->host.empty() ? nullptr : config->host.c_str(),
                                 config->user.empty() ? nullptr : config->user.c_str(),
                                 config->password.empty() ? nullptr : config->password.c_str(), nullptr, config->port,

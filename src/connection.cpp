@@ -26,9 +26,9 @@
 
 #include <ciso646>
 #include <iostream>
-#ifdef __APPLE__
-#include <boost/thread/tss.hpp>  // libc++ does not have thread_local yet.
-#endif
+//#ifdef __APPLE__
+//#include <boost/thread/tss.hpp>  // libc++ does not have thread_local yet.
+//#endif
 #include "detail/connection_handle.h"
 #include "detail/prepared_statement_handle.h"
 #include "detail/result_handle.h"
@@ -73,20 +73,20 @@ namespace sqlpp
         }
       };
 
-#ifdef __APPLE__
-      boost::thread_specific_ptr<MySqlThreadInitializer> mysqlThreadInit;
-#endif
+//#ifdef __APPLE__
+//      boost::thread_specific_ptr<MySqlThreadInitializer> mysqlThreadInit;
+//#endif
 
       void thread_init()
       {
-#ifdef __APPLE__
-        if (!mysqlThreadInit.get())
-        {
-          mysqlThreadInit.reset(new MySqlThreadInitializer);
-        }
-#else
+//#ifdef __APPLE__
+//        if (!mysqlThreadInit.get())
+//        {
+//          mysqlThreadInit.reset(new MySqlThreadInitializer);
+//        }
+//#else
         thread_local MySqlThreadInitializer threadInitializer;
-#endif
+//#endif
       }
 
       void execute_statement(detail::connection_handle_t& handle, const std::string& statement)
